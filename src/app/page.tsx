@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { read, utils } from "xlsx";
-import { Button } from "@/components/ui/button";
+import { CustomButton } from "@/components/ui/custom-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -55,16 +55,11 @@ export default function Home() {
           const workbook = read(data, { type: "binary" });
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
-          const jsonData = utils.sheet_to_json(worksheet, { header: 1 }) as
-            | string[][]
-            | any;
+          const jsonData = utils.sheet_to_json(worksheet, { header: 1 }) as string[][] | any;
           // Extract phone numbers assuming they are in the first column
           const phones = jsonData
             .map((row: any) => row[0])
-            .filter(
-              (phone: any) =>
-                typeof phone === "string" || typeof phone === "number"
-            )
+            .filter((phone: any) => typeof phone === "string" || typeof phone === "number")
             .map((phone: any) => phone.toString());
           setContacts(phones);
         }
@@ -81,7 +76,7 @@ export default function Home() {
         const res = await fetch("/api/whatsapp", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ phone, message }),
+          body: JSON.stringify({ action: 'send', phone, message }),
         });
         const data = await res.json();
         if (data.status !== "success") {
@@ -159,13 +154,13 @@ export default function Home() {
             />
           </section>
 
-          <Button
+          <CustomButton
             onClick={sendMessages}
             disabled={sending || contacts.length === 0}
             className="w-full max-w-md"
           >
             {sending ? `Enviando... ${progress}%` : "Enviar Mensagens"}
-          </Button>
+          </CustomButton>
         </>
       )}
     </main>

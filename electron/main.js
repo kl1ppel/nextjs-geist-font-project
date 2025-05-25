@@ -12,7 +12,14 @@ function createWindow() {
     },
   });
 
-  win.loadFile(path.join(__dirname, 'index.html'));
+  // Load the Next.js development server in development
+  // or the built app in production
+  const isDev = process.env.NODE_ENV !== 'production';
+  if (isDev) {
+    win.loadURL('http://localhost:8000'); // Using port 8000 as specified in package.json
+  } else {
+    win.loadFile(path.join(__dirname, '../out/index.html'));
+  }
   // Open DevTools optionally
   // win.webContents.openDevTools();
 }
